@@ -14,4 +14,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && echo 'deb-src https://qgis.org/ubuntugis bionic main' >> /etc/apt/sources.list.d/qgis.list \
   && apt-get update
 
+RUN apt-get install -y --no-install-recommends python3-pip
+RUN apt-get install -y --no-install-recommends python3-venv
+
+ENV VIRTUAL_ENV=/usr/local/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+#RUN pip install minimal
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+RUN adduser --gecos app --disabled-password app
+
+USER app
+
 
